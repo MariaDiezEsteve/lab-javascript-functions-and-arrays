@@ -16,12 +16,15 @@ console.log (maxOfTwoNumbers(2, 1))
 // Iteration #2: Find longest word
 const words = ['mystery', 'brother', 'aviator', 'crocodile', 'pearl', 'orchard', 'crackpot'];
 
-function findLongestWord(words) {
-  let longest = words[0];
+function findLongestWord (words) {
+  let longest = "";
+  if(words.length === 0){
+    return null; // guard class
+  }
     
   for (let i = 0; i < words.length; i++) {
     if (words[i].length > longest.length){
-      longest = words[i];
+      words[i].length = longest.length
     }
   }
   return longest
@@ -32,7 +35,7 @@ function findLongestWord(words) {
 // Iteration #3: Calculate the sum
 const numbers = [6, 12, 1, 18, 13, 16, 2, 1, 8, 10];
 
-function sumNumbers(numbers) {
+function sumNumbers(numbers){
   let sum = 0;
   
   for(let i = 0 ; i < numbers.length; i ++){
@@ -45,8 +48,22 @@ console.log(sumNumbers(numbers))
 
 
 // Iteration #3.1 Bonus:
-function sum() {}
-
+function sum(number) {
+  let sum = 0;
+  
+  for(let i = 0; i < number.length ; i++){
+    if(typeof number[i] === "number"){
+      sum = sum + number[i];
+    } else if (typeof number[i] === "string"){
+      sum = sum + numbers[i].length;
+    } else if (typeof number[i] === "boolean"){
+      sum = sum + numbers[i];
+    } else {
+      return ("error no data")
+    }
+  }
+  return sum;
+}
 
 
 // Iteration #4: Calculate the average
@@ -54,13 +71,18 @@ function sum() {}
 const numbersAvg = [2, 6, 9, 10, 7, 4, 1, 9];
 
 function averageNumbers(numbersAvg) {
-let sum = 0;
+let average = 0;
+
+if (numbersAvg.length === 0){
+  return null
+}
   
 for ( let i = 0; i < numbersAvg.length; i++){
-  sum = sum + numbersAvg[i]
+  average = average + numbersAvg[i]
 }
-let avg = sum / numbersAvg.length 
-return avg
+average = average / numbersAvg.length;
+
+return average
 }
 
 console.log (averageNumbers(numbersAvg) )
@@ -81,7 +103,26 @@ return avg;
 console.log(averageWordLength(wordsArr))
 
 // Bonus - Iteration #4.1
-function avg() {}
+function avg(arr) {
+let avgArr = 0;
+
+if(arr.length === 0){
+  return null
+}
+
+for (let i = 0; i < arr.length; i++){
+  if (typeof arr[i] === "number"){
+    avgArr = avgArr + arr[i]
+  } else if (typeof arr[i] === "string"){
+    avgArr = avgArr + arr[i].length
+  } else if (typeof arr[i] === "boolean"){
+    avgArr = avgArr + arr[i]
+  }
+}
+avgArr = avgArr / avgArr.length
+avgArr = parseFloat(avgArr.toFixed(2));
+return avgArr;
+}
 
 // Iteration #5: Unique arrays
 const wordsUnique = [
@@ -97,11 +138,19 @@ const wordsUnique = [
   'simple',
   'bring'
 ];
-function uniquifyArray( wordsUnique ) {
-  return wordsUnique.filter( (elm, idx, arr) => arr.indexOf(elm) == idx );  
+function uniquifyArray (wordsUnique){
+  let uniqueArr= [];
+  if (wordsUnique.length === 0){
+    return null
+  }
+  for (let i = 0; i < wordsUnique.length; i++){
+  let word = wordsUnique[i]
+  if(uniqueArr.indexOf(word) < 0){
+    uniqueArr.push(word);
+  }
+  }
+  return uniqueArr; 
 }
-
-console.log(uniquifyArray(wordsUnique))
 
 
 // Iteration #6: Find elements
@@ -110,12 +159,16 @@ const wordsFind = ['machine', 'subset', 'trouble', 'starting', 'matter', 'eating
 let wordsSearch
 
 function doesWordExist(wordsFind, wordsSearch) {
-  if (wordsFind.length > 0 && wordsFind.includes(wordsSearch)) {
-    return true;
-   } else {
-    return false;
+  if (wordsFind.length === 0){
+    return null;
+  }
+  for( let i = 0; i < wordsFind; i++){
+    if (wordsFind[i] === wordsSearch[i]) {
+      return true;
+     } 
     }
-}
+      return false;
+    }
 
 console.log(doesWordExist(wordsFind, wordsSearch))
 
@@ -195,3 +248,81 @@ if (typeof module !== 'undefined') {
     greatestProduct
   };
 }
+
+/* SOLUTION
+// fixed solution
+function greatestProduct(matrix) {
+  let greatest = 0;
+  
+  let horizontal = 0;
+  let vertical = 0;
+  let diagonal = 0;
+  let inverseDiagonal = 0
+  
+  for (let ver = 0; ver < matrix.length - 3; ver++) {
+    for (let hor = 0; hor < matrix.length - 3; hor++) {
+      horizontal = matrix[ver][hor] * matrix[ver][hor+1] * matrix[ver][hor+2] * matrix[ver][hor+3]
+      if (horizontal > greatest) { greatest = horizontal}
+      
+      vertical = matrix[ver][hor] * matrix[ver+1][hor] * matrix[ver+2][hor] * matrix[ver+3][hor]
+      if (vertical > greatest) { greatest = vertical}
+      
+      diagonal = matrix[ver][hor] * matrix[ver+1][hor+1] * matrix[ver+2][hor+2] * matrix[ver+3][hor+3]
+      if (diagonal > greatest) { greatest = diagonal}
+      
+      inverseDiagonal = matrix[ver][hor+3] * matrix[ver+1][hor+2] * matrix[ver+2][hor+1] * matrix[ver+3][hor]
+      if (inverseDiagonal > greatest) { greatest = inverseDiagonal}
+      
+      // first iteration:  ver 0 hor 0
+      // horizontal:       0 0 * 0 1 * 0 2 * 0 3
+      // vertical:         0 0 * 1 0 * 2 0 * 3 0
+      // diagonal:         0 0 * 1 1 * 2 2 * 3 3
+      // inverseDiagonal:  0 3 * 1 2 * 2 1 * 3 0
+      
+    }
+  }
+  return greatest
+}
+
+function greatestProductOfDiagonals(matrix) {
+  const productsOfFourNumbers = [];
+
+  // pushing all products into the array productsOfFourNumbers
+  matrix.forEach((arr, index) => {
+    // vertical products
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i + 3]) {
+        let product = arr[i] * arr[i + 1] * arr[i + 2] * arr[i + 3];
+        productsOfFourNumbers.push(product);
+      }
+    }
+    // horizontal products
+    for (let i = 0; i < arr.length; i++) {
+      if (matrix[index + 3] && matrix[index + 3][i]) {
+        let product =
+          matrix[index][i] * matrix[index + 1][i] * matrix[index + 2][i] * matrix[index + 3][i];
+        productsOfFourNumbers.push(product);
+      }
+    }
+    // diagonal products
+    for (let i = 0; i < arr.length; i++) {
+      if (matrix[index + 3] && matrix[index + 3][i + 3]) {
+        let product =
+          matrix[index][i] *
+          matrix[index + 1][i + 1] *
+          matrix[index + 2][i + 2] *
+          matrix[index + 3][i + 3];
+        productsOfFourNumbers.push(product);
+      }
+    }
+  });
+
+  // finding the greatest number in the array productOfFourNumbers
+  let result = 0;
+  productsOfFourNumbers.forEach(num => {
+    if (num > result) {
+      result = num;
+    }
+  });
+  return result;
+} */
